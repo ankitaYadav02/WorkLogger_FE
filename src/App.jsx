@@ -1,37 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import appLogo from '/favicon.svg'
-import PWABadge from './PWABadge.jsx'
-import './App.css'
+
+import Layout from "./Layout";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Login from './pages/Login'
+import DashboardPage from "./pages/Dashboard";
+import { useEffect } from "react";
+import ForgetPassword from "./pages/ForgetPassword";
+import AdminDashboard from './pages/AdminDashboard';
+import ChangePassword from './components/Auth/ChangePassword/PasswordChange';
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { index: true, element: <Login /> },
+      { path: "/dashboard", element: <DashboardPage /> },
+      { path: "/forget-password", element: <ForgetPassword /> },
+      { path: "/admin-dashboard", element: <AdminDashboard /> },
+      { path: "/change-password", element: <ChangePassword /> },
+    ],
+  },
+]);
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={appLogo} className="logo" alt="timesheet logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>timesheet</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <PWABadge />
-    </>
-  )
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
+

@@ -1,10 +1,11 @@
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
-// https://vitejs.dev/config/
+
 export default defineConfig({
-  plugins: [react(), VitePWA({
+  plugins: [react(), tailwindcss(), VitePWA({
     registerType: 'autoUpdate',
     injectRegister: false,
 
@@ -12,7 +13,27 @@ export default defineConfig({
       disabled: false,
       config: true,
     },
+    resolve: {
 
+      alias: {
+
+        '@': './src',
+        '@/components': './src/components',
+        '@/pages': './src/pages',
+        '@/assets': './src/assets',
+
+      }
+
+    },
+    server: {
+      host: true,  // This automatically binds to your local IP
+      port: 8080,  // Use a fixed port
+      strictPort: true, // Ensures the port doesn't change
+      hmr: {
+        clientPort: 8080, // Fixes HMR issues on external devices
+      }
+    }
+,  
     manifest: {
       name: 'timesheet',
       short_name: 'timesheet',
@@ -32,5 +53,6 @@ export default defineConfig({
       suppressWarnings: true,
       type: 'module',
     },
+
   })],
 })
