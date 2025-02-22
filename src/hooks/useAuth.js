@@ -55,7 +55,7 @@ const useAuth = () => {
                 return error.response.data;
             }
 
-            throw error; 
+            throw error;
         }
     };
 
@@ -79,12 +79,12 @@ const useAuth = () => {
                 return error.response.data;
             }
 
-            throw error; 
+            throw error;
         }
     };
 
 
-    return { login, register, Change_Password , Change_admin_Password , loading};
+    return { login, register, Change_Password, Change_admin_Password, loading };
 
 }
 

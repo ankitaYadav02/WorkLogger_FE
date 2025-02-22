@@ -8,20 +8,44 @@ import {
   YAxis,
 } from "recharts";
 import { motion } from "framer-motion";
-import workHistoryy from "../../utils/WorkingHour";
 import Card from "../Primitives/Card/Card";
+import useDashboardData from "../../hooks/useEmployDashboard";
 
 const WorkerHistoryChart = () => {
-  const [filter, setFilter] = useState("monthly");
+  const [filter, setFilter] = useState("Weekly");
   const [workHistory, setWorkHistory] = useState([]);
-
-  const calculateTotalHours = (data) => {
-    return data.reduce((sum, entry) => sum + parseFloat(entry.hours), 0);
-  };
+  const { FetchMonthlyData, FetchweeklyData } = useDashboardData();
 
   useEffect(() => {
-    setWorkHistory(workHistoryy);
-  }, []);
+    if (filter === "Weekly") {
+      FetchweeklyData().then((res) => {
+        setWorkHistory(formatWorkData(res));
+      });
+    } else if (filter === "Monthly") {
+      FetchMonthlyData().then((res) => {
+        setWorkHistory(formatWorkData(res));
+      });
+    }
+  }, [filter]);
+  const convertTimeToHours = (timeStr) => {
+    if (!timeStr || timeStr === '"0"' || timeStr === "0") return 0; 
+
+    const cleanedTimeStr = timeStr.replace(/"/g, ""); 
+    const timeParts = cleanedTimeStr.split(":").map(Number);
+
+    if (timeParts.length === 3) {
+      const [hours, minutes, seconds] = timeParts;
+      return hours + minutes / 60 + seconds / 3600;
+    }
+    return 0; 
+  };
+
+  const formatWorkData = (data) => {
+    return data.map((entry) => ({
+      date: entry.date,
+      hours: convertTimeToHours(entry.work_hour),
+    }));
+  };
 
   const getFilteredWorkHistory = () => {
     const now = new Date();
@@ -31,7 +55,7 @@ const WorkerHistoryChart = () => {
       return workHistory.filter((entry) => entry.date === today);
     }
 
-    if (filter === "weekly") {
+    if (filter === "Weekly") {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
       return workHistory.filter(
@@ -39,7 +63,7 @@ const WorkerHistoryChart = () => {
       );
     }
 
-    if (filter === "monthly") {
+    if (filter === "Monthly") {
       const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       return workHistory.filter(
         (entry) => new Date(entry.date) >= firstDayOfMonth
@@ -50,13 +74,6 @@ const WorkerHistoryChart = () => {
   };
 
   const filteredWorkHistory = getFilteredWorkHistory();
-  const totalHours = calculateTotalHours(filteredWorkHistory);
-
-  // Format data for the bar chart
-  const chartData = filteredWorkHistory.map((entry) => ({
-    date: entry.date,
-    hours: parseFloat(entry.hours),
-  }));
 
   return (
     <Card>
@@ -67,8 +84,8 @@ const WorkerHistoryChart = () => {
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         >
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Monthly">Monthly</option>
         </select>
       </div>
       <div>
@@ -79,7 +96,7 @@ const WorkerHistoryChart = () => {
           className="mt-4 bg-white p-4 "
         >
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
+            <BarChart data={filteredWorkHistory}>
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />

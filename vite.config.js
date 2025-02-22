@@ -5,6 +5,16 @@ import tailwindcss from '@tailwindcss/vite'
 
 
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      css: {
+        additionalData: `
+          ::-webkit-scrollbar { display: none; }
+          * { scrollbar-width: none; }
+        `,
+      },
+    },
+  },
   plugins: [react(), tailwindcss(), VitePWA({
     registerType: 'autoUpdate',
     injectRegister: false,

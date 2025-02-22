@@ -1,148 +1,122 @@
 import React, { useEffect, useState } from "react";
 import PeriodSelector from "./PeriodSelector";
 import { motion } from "framer-motion";
-import workHistoryy from "../../utils/WorkingHour";
-import workHistoryRawData from "../../utils/workHistoryRawData";
+import useDashboardData from "../../hooks/useEmployDashboard";
 
 const formatDate = (isoString) => {
   const date = new Date(isoString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${day}/${month}/${year}`;
+  return date.toLocaleDateString("en-GB");
+}; 
+
+const cleanWorkHour = (work_hour) => {
+  const cleanText = work_hour.replace(/"/g, "");
+  return cleanText === "0" ? "No Work Logged" : cleanText;
 };
 
-const formatTime = (isoString) => {
-  const date = new Date(isoString);
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${hours}:${minutes}`;
+const formatPunchTimes = (working_hours) => {
+  if (!working_hours  || working_hours.length === 0) {
+    return ["No Punch Data"];
+  }
+
+  return working_hours.map((punch) => {
+    const { punch_in_time, punch_out_time } = punch;
+    return `${punch_in_time} - ${punch_out_time}`;
+  })
 };
 
 const WorkHistoryTable = () => {
-  const [selectedPeroid, setSelectedPeriod] = useState("Weekly");
-  const [workHistory, setWorkHistory] = useState([]);
+  const [selectedPeriod, setSelectedPeriod] = useState("Weekly");
+  const { FetchMonthlyData, FetchweeklyData } = useDashboardData();
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    setWorkHistory(workHistoryy);
-  }, []);
+    if (selectedPeriod === "Weekly") {
+      FetchweeklyData().then((res) => processData(res));
+    } else if (selectedPeriod === "Monthly") {
+      FetchMonthlyData().then((res) => processData(res));
+    }
+  }, [selectedPeriod]);
 
-  const getFilteredWorkHistory = () => {
-    const now = new Date();
-    const today = now.toISOString().split("T")[0];
-
-    if (selectedPeroid === "Daily") {
-      return workHistory.filter((entry) => entry.date === today);
+  const processData = (res) => {
+    if (!res || res.length === 0) {
+      setData([]);
+      return;
     }
 
-    if (selectedPeroid === "Weekly") {
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-      return workHistory.filter(
-        (entry) => new Date(entry.date) >= sevenDaysAgo
-      );
-    }
+    const formattedData = res.map(({ date, work_hour, working_hour }) => ({
+      date: formatDate(date),
+      work_hour: cleanWorkHour(work_hour),
+      punchTimes: formatPunchTimes(JSON.parse(working_hour)),
+    }));
 
-    if (selectedPeroid === "Monthly") {
-      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      return workHistory.filter(
-        (entry) => new Date(entry.date) >= firstDayOfMonth
-      );
-    }
-
-    return workHistory;
+    setData(formattedData);
   };
-
-  const filterDataByPeriod = () => {
-    const now = new Date();
-    const days = selectedPeroid === "Weekly" ? 7 : 30;
-    const cutoffDate = new Date();
-    cutoffDate.setDate(now.getDate() - days); // Ensuring correct calculation
-
-    return workHistoryRawData
-      .filter((entry) => new Date(entry.date) >= cutoffDate)
-      .sort((a, b) => new Date(b.in) - new Date(a.in));
-  };
-
-  console.log(selectedPeroid);
-
-  const filteredWorkHistory = getFilteredWorkHistory();
 
   return (
-    <div>
-      <h3 className="text-lg font-semibold text-gray-800 mt-8">Work History</h3>
+    <div className="md:p-6 bg-gray-50 rounded-lg shadow-sm">
+      <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Work History</h3>
 
-      <div className="flex justify-between items-center">
-        <p>
-          Total Hours: <span className="font-bold">45 Hours</span>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+        <p className="text-gray-600 mb-4 sm:mb-0">
+          Total Hours: <span className="font-bold text-gray-800">45 Hours</span>
         </p>
         <PeriodSelector
           onSelect={(e) => setSelectedPeriod(e)}
-          selectedPeriod={selectedPeroid}
+          selectedPeriod={selectedPeriod}
         />
       </div>
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <div className="overflow-auto max-h-96 ring-1 shadow-sm ring-black/5 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50 sticky top-0">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                    >
-                      Date
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Clock In
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Clock Out
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Total Hours
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {filterDataByPeriod().map((history, index) => (
-                    <motion.tr
-                      key={history.date}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">
-                        {formatDate(history.date)}
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                        {formatTime(history.in)}
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                        {formatTime(history.out)}
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                       5 hours
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+
+      <div className="overflow-x-auto rounded-lg shadow-sm">
+        <table className="min-w-full bg-white rounded-lg overflow-hidden">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                Date
+              </th>
+              <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                Punch In/Out Times
+              </th>
+              <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                Work Hours
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {data.length === 0 ? (
+              <tr>
+                <td colSpan="3" className="py-4 px-6 text-center text-gray-500">
+                  No work history available
+                </td>
+              </tr>
+            ) : (
+              data.map((entry, index) => (
+                <motion.tr
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="py-4 px-6 text-sm font-medium text-gray-900">
+                    {entry.date}
+                  </td>
+                  <td className="py-4 px-6 text-sm text-gray-700">
+                    <div className="flex flex-col space-y-2">
+                      {entry.punchTimes.map((time, i) => (
+                        <span key={i} className="block">
+                          {time}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="py-4 px-6 text-sm text-gray-700">
+                    {entry.work_hour}
+                  </td>
+                </motion.tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -1,26 +1,78 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonCard from "../components/Primitives/Button/ButoonCard";
 import InputBox from "../components/Primitives/Inputbox";
+import useDashboardData from "../hooks/useEmployDashboard";
+import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 const ForgetPassword = () => {
-    const [step, setStep] = useState(1); // Step 1: Email, Step 2: OTP, Step 3: Reset Password
+    const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
+    const navigate = useNavigate();
     const [otp, setOtp] = useState("");
+    const [resotp, setResotp] = useState("");
     const [newPassword, setNewPassword] = useState("");
-    const handleSendOTP = (e) => {
+    const { ForgrtPasswordOTP, ChangeForgetPasswors, isLoading } = useDashboardData();
+    const [emailError, setEmailError] = useState("");
+    const { enqueueSnackbar } = useSnackbar();
+    const [new_password_error, set_new_password_error] = useState("");
+    const validateEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+
+    const handlePasswordChange = (e) => {
+        const value = e.target.value;
+        setNewPassword(value);
+        if (value && !passwordRegex.test(value)) {
+            set_new_password_error("Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character.");
+        } else {
+            set_new_password_error("");
+        }
+    };
+
+    const handleEmailChange = (e) => {
+        const value = e.target.value;
+        setEmail(value);
+        if (value && !validateEmail(value)) {
+            setEmailError("Invalid email address");
+        } else {
+            setEmailError("");
+        }
+    };
+    const handleSendOTP = async (e) => {
         e.preventDefault();
-        console.log("OTP Sent to:", email);
-        setStep(2);
+        const res = await ForgrtPasswordOTP(email);
+        if (res.statusCode === 200) {
+            console.log(res.data);
+            setResotp(res.data);
+            enqueueSnackbar(res.message, { variant: "success" });
+            setStep(2);
+        } else {
+            enqueueSnackbar(res.message, { variant: "error" });
+        }
     };
     const handleVerifyOTP = (e) => {
         e.preventDefault();
-        console.log("OTP Verified:", otp);
+        if (otp === "") {
+            enqueueSnackbar("Please enter OTP", { variant: "error" });
+            return;
+        }
+        if (otp !== resotp) {
+            enqueueSnackbar("Invalid OTP", { variant: "error" });
+            return;
+        }
         setStep(3);
     };
-    const handleResetPassword = (e) => {
+    const handleResetPassword = async (e) => {
         e.preventDefault();
-        console.log("Password Reset for:", email);
-        alert("Password Reset Successfully!");
+        const res = await ChangeForgetPasswors(email, newPassword);
+        if (res.statusCode === 200) {
+            enqueueSnackbar(res.message, { variant: "success" });
+            navigate("/login");
+        } else {
+            enqueueSnackbar(res.message, { variant: "error" });
+        }
     };
     return (
         <div className="min-h-screen flex items-center justify-center bg-white shadow-lg p-4">
@@ -28,7 +80,6 @@ const ForgetPassword = () => {
                 <h1 className="text-center text-3xl font-extrabold text-gray-900 mb-6">
                     {step === 1 ? "Forgot Password" : step === 2 ? "Verify OTP" : "Reset Password"}
                 </h1>
-
                 {step === 1 && (
                     <form onSubmit={handleSendOTP}>
                         <p className="text-center text-gray-600 mb-4">
@@ -41,15 +92,15 @@ const ForgetPassword = () => {
                                 name="email"
                                 type="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={handleEmailChange}
+                                error={emailError}
                             />
                         </div>
                         <div className="flex justify-center">
-                            <ButtonCard title="Send OTP" type="submit" />
+                            <ButtonCard title={isLoading ? "Sending OTP..." : "Send OTP"} type="submit" />
                         </div>
                     </form>
                 )}
-
                 {step === 2 && (
                     <form onSubmit={handleVerifyOTP}>
                         <p className="text-center text-gray-600 mb-4">Enter the OTP sent to your email.</p>
@@ -79,7 +130,8 @@ const ForgetPassword = () => {
                                 name="newPassword"
                                 type="password"
                                 value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
+                                onChange={handlePasswordChange}
+                                error={new_password_error}
                             />
                         </div>
                         <div className="flex justify-center">
@@ -90,7 +142,14 @@ const ForgetPassword = () => {
 
                 {step !== 1 && (
                     <p className="text-center text-sm text-gray-600 mt-4">
-                        <button onClick={() => setStep(1)} className="text-blue-500 hover:underline">
+                        <button onClick={() => {
+                            setStep(1);
+                            setEmail("");
+                            setOtp("");
+                            setNewPassword("");
+                            setEmailError("");
+                            set_new_password_error("");
+                        }} className="text-blue-500 hover:underline">
                             Start Over
                         </button>
                     </p>

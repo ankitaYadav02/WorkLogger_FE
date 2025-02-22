@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 import InputBox from "../components/Primitives/Inputbox";
 import ButtonCard from "../components/Primitives/Button/ButoonCard";
@@ -14,27 +14,43 @@ const Login = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (error.email && email.includes("@")) {
+      setError((prev) => ({ ...prev, email: "" }));
+    }
+  }, [email]);
+
+  useEffect(() => {
+    if (error.password && password.length >= 8) {
+      setError((prev) => ({ ...prev, password: "" }));
+    }
+  }, [password]);
+
   const handleSubmit = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const newError = { email: "", password: "" };
+
     if (!emailRegex.test(email)) {
       newError.email = "Invalid email format";
+    }
+    if (password.length < 8) {
+      newError.password = "Password must be at least 8 characters";
+    }
+
+    if (newError.email || newError.password) {
       setError(newError);
-      enqueueSnackbar("Invalid email format", { variant: "error" });
+      enqueueSnackbar("Please fix the errors", { variant: "error" });
       return;
     }
+
     setError(newError);
-    navigate("/dashboard");
     const response = await login(email, password);
-    // if (response.statusCode == 200 && response.data.userType == "admin") {
-    //   navigate("/admin-dashboard");
-    //   enqueueSnackbar(response.message, { variant: "success" });
-    // } else if (response.statusCode == 200 && response.data.userType == "user") {
-    //   navigate("/dashboard");
-    //   enqueueSnackbar(response.message, { variant: "success" });
-    // } else {
-    //   enqueueSnackbar(response.message, { variant: "error" });
-    // }
+    if (response.statusCode === 200) {
+      navigate(response.data.userType === "admin" ? "/admin-dashboard" : "/dashboard");
+      enqueueSnackbar(response.message, { variant: "success" });
+    } else {
+      enqueueSnackbar(response.message, { variant: "error" });
+    }
   };
 
   return (

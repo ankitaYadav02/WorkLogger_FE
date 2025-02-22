@@ -1,50 +1,39 @@
 import { useState } from "react";
-import { MdAnnouncement } from "react-icons/md";
 import { FiMenu, FiHome, FiSettings, FiLogOut, FiInfo, } from "react-icons/fi";
-import { LuActivity } from "react-icons/lu";
-import { FiUser } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import EmployeeDashboard from '../EmployDashboardCard/index';
 import ChangePassword from '../../../Auth/ChangePassword/PasswordChange';
-
-
 const Dashboard = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [post, setPost] = useState("Death");
   const navigate = useNavigate();
-
   const handleUpdatePost = (post) => {
     setPost(post);
   };
-
   const logoutCall = async () => {
     localStorage.removeItem("token");
     navigate("/");
   };
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
-    if(window.innerWidth < 768){
+    if (window.innerWidth < 768) {
       setIsCollapsed(true);
     }
   };
-
   const menuData = [
     { id: "Dashboard", label: "Dashboard", icon: <FiHome size={20} />, content: <EmployeeDashboard handleMenuClick={handleMenuClick} handleUpdatePost={handleUpdatePost} /> },
     { id: "ChangePassword", label: "Change Password", icon: <FiSettings size={20} />, content: <ChangePassword role={"user"} /> },
 
   ];
-
-
-
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
   return (
-    <div className="flex w-full h-screen  ">
+    <div className="flex w-full h-screen overscroll-none hide-scrollbar   ">
       <div
-        className={`bg-gradient-to-r from-blue-600 to-purple-600 flex flex-col justify-between text-white transition-all duration-300 ${isCollapsed ? "md:w-16 w-0" : "md:w-64 w-[100vw]"} h-[100vh]`}
+        className={`bg-gradient-to-r from-blue-600 to-purple-600 flex flex-col justify-between scrollbar-hide text-white transition-all duration-300 ${isCollapsed ? "md:w-16 w-0" : "md:w-64 w-[100vw]"} h-[100vh]`}
       >
         <div className="flex flex-col h-full">
           <button
@@ -70,31 +59,6 @@ const Dashboard = () => {
             </button>
           </nav>
         </div>
-        <ul data-sidebar="menu" className="flex w-full min-w-0 flex-col gap-1">
-          <li data-sidebar="menu-item" className="group/menu-item relative">
-            <button
-              data-sidebar="menu-button"
-              data-size="lg"
-              data-active="false"
-              className="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-12 text-sm group-data-[collapsible=icon]:!p-0 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              type="button"
-              id="radix-:Redtrb:"
-              aria-haspopup="menu"
-              aria-expanded="false"
-              data-state="closed"
-            >
-              <span className="relative flex shrink-0 overflow-hidden h-8 w-8 rounded-lg">
-                <span className="flex h-full w-full items-center justify-center bg-muted rounded-lg">
-                  <FiUser className="text-xl text-white" />
-                </span>
-              </span>
-              <div className={`grid flex-1 text-left text-sm leading-tight ${isCollapsed ? "hidden" : ""}`}>
-                <span className="truncate font-semibold">Employe Dashboard</span>
-                <span className="truncate text-xs">super-admin@mail.com</span>
-              </div>
-            </button>
-          </li>
-        </ul>
       </div>
       <div className="flex-1  h-[100vh] overflow-y-scroll no-scrollbar">
         {menuData.find(item => item.id === activeMenu)?.content || (

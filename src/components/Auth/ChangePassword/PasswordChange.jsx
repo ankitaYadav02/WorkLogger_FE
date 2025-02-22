@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputBox from "../../Primitives/Inputbox";
 import ButtonCard from "../../Primitives/Button/ButoonCard";
 import useAuth from "../../../hooks/useAuth";
@@ -12,11 +12,21 @@ const ChangePassword = ({ role }) => {
     const [successMessage, setSuccessMessage] = useState("");
     const { enqueueSnackbar } = useSnackbar();
     const { Change_Password, Change_admin_Password, loading } = useAuth();
+    useEffect(() => {
+        if (confirmPassword && confirmPassword === newPassword) {
+            setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+        }
+        if (newPassword && newPassword.length >= 8 && newPassword.match(/(?=.*[A-Z])(?=.*\d).{8,}/)) {
+            setErrors((prev) => ({ ...prev, newPassword: "" }));
+        }
+        if (currentPassword) {
+            setErrors((prev) => ({ ...prev, currentPassword: "" }));
+        }
+    }, [confirmPassword, newPassword, currentPassword]);
 
     const validatePassword = (password) => {
         return /(?=.*[A-Z])(?=.*\d).{8,}/.test(password);
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         let validationErrors = {};
