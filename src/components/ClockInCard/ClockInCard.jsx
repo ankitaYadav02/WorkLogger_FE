@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../Primitives/Button/Button";
 import Card from "../Primitives/Card/Card";
 import useDashboardData from "../../hooks/useEmployDashboard";
+import Loading from "../Loading";
 
 const ClockInCard = () => {
   const [isClockIn, setIsClockIn] = useState(false);
@@ -29,6 +30,9 @@ const ClockInCard = () => {
       setClockInTime(isClockIn ? null : new Date());
     }
   };
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Card>

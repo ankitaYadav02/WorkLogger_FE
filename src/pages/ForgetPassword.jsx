@@ -4,6 +4,7 @@ import InputBox from "../components/Primitives/Inputbox";
 import useDashboardData from "../hooks/useEmployDashboard";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const ForgetPassword = () => {
     const [step, setStep] = useState(1);
@@ -74,6 +75,9 @@ const ForgetPassword = () => {
             enqueueSnackbar(res.message, { variant: "error" });
         }
     };
+    if(isLoading){
+        return <Loading/>
+    }
     return (
         <div className="min-h-screen flex items-center justify-center bg-white shadow-lg p-4">
             <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">

@@ -5,12 +5,13 @@ import ButtonCard from "../components/Primitives/Button/ButoonCard";
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState({ email: "", password: "" });
-  const { login } = useAuth();
+  const { login , loading } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
@@ -53,6 +54,9 @@ const Login = () => {
     }
   };
 
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg flex flex-col gap-4">

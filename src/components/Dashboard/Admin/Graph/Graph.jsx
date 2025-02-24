@@ -4,9 +4,10 @@ import {
     LineChart, Line, Legend
 } from "recharts";
 import useAdminHook from "../../../../hooks/useAdminHook";
+import Loading from "../../../Loading";
 
 const AttendanceGraph = ({ switchTab, viewId }) => {
-    const { FetchMonthlyData, FetchweeklyData } = useAdminHook();
+    const { FetchMonthlyData, FetchweeklyData , loading } = useAdminHook();
     const [attendanceData, setAttendanceData] = useState([]);
     const [isWeekly, setIsWeekly] = useState(true);
 
@@ -35,7 +36,9 @@ const AttendanceGraph = ({ switchTab, viewId }) => {
         const parts = timeString.split(":").map(Number);
         return parts.length === 3 ? parts[0] * 3600 + parts[1] * 60 + parts[2] : 0;
     };
-
+    if (loading) {
+        return <Loading />;
+      }
     return (
         <div className="p-4 w-full max-w-4xl mx-auto">
             <div className="flex justify-between items-center mb-4">

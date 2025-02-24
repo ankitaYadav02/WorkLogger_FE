@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import InputBox from "../../../Primitives/Inputbox";
 import useAdminHook from "../../../../hooks/useAdminHook";
 import { useSnackbar } from "notistack";
+import Loading from "../../../Loading";
 
 const EmployCard = ({ switchTab, updateViewId }) => {
     const { admin_employee, loading, AddEmploye, EditEmploye, DeleteEmploye } = useAdminHook();
@@ -101,6 +102,10 @@ const EmployCard = ({ switchTab, updateViewId }) => {
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
+
+    if (loading) {
+        return <Loading />;
+      }
 
     return (
         <div className="min-h-screen bg-white p-6">

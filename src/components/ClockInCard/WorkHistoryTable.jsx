@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PeriodSelector from "./PeriodSelector";
 import { motion } from "framer-motion";
 import useDashboardData from "../../hooks/useEmployDashboard";
-
+import Loading from "../Loading";
 const formatDate = (isoString) => {
   const date = new Date(isoString);
   return date.toLocaleDateString("en-GB");
@@ -26,7 +26,7 @@ const formatPunchTimes = (working_hours) => {
 
 const WorkHistoryTable = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("Weekly");
-  const { FetchMonthlyData, FetchweeklyData } = useDashboardData();
+  const { FetchMonthlyData, FetchweeklyData , isLoading } = useDashboardData();
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -51,6 +51,10 @@ const WorkHistoryTable = () => {
 
     setData(formattedData);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="md:p-6 bg-gray-50 rounded-lg shadow-sm">

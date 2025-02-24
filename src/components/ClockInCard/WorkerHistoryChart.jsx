@@ -10,11 +10,12 @@ import {
 import { motion } from "framer-motion";
 import Card from "../Primitives/Card/Card";
 import useDashboardData from "../../hooks/useEmployDashboard";
+import Loading from "../Loading";
 
 const WorkerHistoryChart = () => {
   const [filter, setFilter] = useState("Weekly");
   const [workHistory, setWorkHistory] = useState([]);
-  const { FetchMonthlyData, FetchweeklyData } = useDashboardData();
+  const { FetchMonthlyData, FetchweeklyData , isLoading } = useDashboardData();
 
   useEffect(() => {
     if (filter === "Weekly") {
@@ -74,7 +75,9 @@ const WorkerHistoryChart = () => {
   };
 
   const filteredWorkHistory = getFilteredWorkHistory();
-
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <Card>
       <div className="max-w-2xs flex items-center gap-2">

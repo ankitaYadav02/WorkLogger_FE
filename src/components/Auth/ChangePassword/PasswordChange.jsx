@@ -4,6 +4,7 @@ import ButtonCard from "../../Primitives/Button/ButoonCard";
 import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import Loading from "../../Loading";
 const ChangePassword = ({ role }) => {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -80,6 +81,10 @@ const ChangePassword = ({ role }) => {
 
 
     };
+
+    if (loading) {
+        return <Loading />;
+      }
 
     return (
         <div className="bg-gray-100 flex items-center justify-center h-screen">

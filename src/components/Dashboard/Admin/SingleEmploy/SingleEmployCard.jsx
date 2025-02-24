@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import ButtonCard from "../../../Primitives/Button/ButoonCard";
 import useAdminHook from "../../../../hooks/useAdminHook";
 import { useSnackbar } from "notistack";
+import Loading from "../../../Loading";
 
 const AttendanceList = ({ switchTab, viewId }) => {
   const [attendanceData, setAttendanceData] = useState({});
@@ -129,7 +130,9 @@ const AttendanceList = ({ switchTab, viewId }) => {
       return updatedData;
     });
   };
-
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-100 min-h-screen">
