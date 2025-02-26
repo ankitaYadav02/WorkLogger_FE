@@ -11,7 +11,7 @@ import { useSnackbar } from "notistack";
 import Loading from "../../../Loading";
 
 const EmployCard = ({ switchTab, updateViewId }) => {
-    const { admin_employee, loading, AddEmploye, EditEmploye, DeleteEmploye } = useAdminHook();
+    const { admin_name, admin_employee, loading, AddEmploye, EditEmploye, DeleteEmploye } = useAdminHook();
     const [employees, setEmployees] = useState([]);
     const [formData, setFormData] = useState({ id: "", name: "", email: "", password: "" });
     const [isEditing, setIsEditing] = useState(false);
@@ -23,7 +23,8 @@ const EmployCard = ({ switchTab, updateViewId }) => {
         if (!loading && admin_employee) {
             setEmployees(admin_employee);
         }
-    }, [admin_employee, loading]);
+        console.log(admin_employee)
+    }, [admin_employee]);
 
     const validateForm = () => {
         let newErrors = {};
@@ -88,10 +89,10 @@ const EmployCard = ({ switchTab, updateViewId }) => {
             header: "Actions",
             cell: ({ row }) => (
                 <div className="flex space-x-4">
-                    <motion.button onClick={() => handleUpdateViewId(row.original.id, 2)} className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition">View</motion.button>
-                    <motion.button onClick={() => handleUpdateViewId(row.original.id, 1)} className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition">Attendance</motion.button>
-                    <motion.button onClick={() => handleEdit(row.original.id)} className="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600 transition">Edit</motion.button>
-                    <motion.button onClick={() => handleDelete(row.original.id)} className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition">Delete</motion.button>
+                    <motion.button onClick={() => handleUpdateViewId(row.original.id, 2)} className="bg-green-500 cursor-pointer text-white px-3 py-1 rounded-lg hover:bg-green-600 transition">View</motion.button>
+                    <motion.button onClick={() => handleUpdateViewId(row.original.id, 1)} className="bg-blue-500 cursor-pointer text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition">Attendance</motion.button>
+                    <motion.button onClick={() => handleEdit(row.original.id)} className="bg-yellow-500 text-white cursor-pointer px-3 py-1 rounded-lg hover:bg-yellow-600 transition">Edit</motion.button>
+                    <motion.button onClick={() => handleDelete(row.original.id)} className="bg-red-500 text-white cursor-pointer px-3 py-1 rounded-lg hover:bg-red-600 transition">Delete</motion.button>
                 </div>
             ),
         },
@@ -105,38 +106,44 @@ const EmployCard = ({ switchTab, updateViewId }) => {
 
     if (loading) {
         return <Loading />;
-      }
+    }
 
     return (
         <div className="min-h-screen bg-white p-6">
             <div className="flex justify-between items-center mb-8">
-                <div className="flex space-x-4">
-                    <motion.button onClick={() => { setIsEditing(false); setModalOpen(true); }} className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition">Add Employee</motion.button>
-                </div>
-                <h1 className="text-4xl font-bold text-black text-center">Admin Dashboard</h1>
+                <h1 className="text-4xl font-bold text-black text-center">{admin_name} Dashboard</h1>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
-                <table className="w-full border-collapse">
-                    <thead>
+                <table className="min-w-full bg-white rounded-lg overflow-hidden">
+                    <thead className="bg-gray-100" >
                         {table.getHeaderGroups().map(headerGroup => (
-                            <tr key={headerGroup.id} className="bg-gray-300 text-gray-800">
+                            <tr key={headerGroup.id} >
                                 {headerGroup.headers.map(header => (
-                                    <th key={header.id} className="p-4 border">{flexRender(header.column.columnDef.header, header.getContext())}</th>
+                                    <th key={header.id} className="py-4 px-6 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                                        {flexRender(header.column.columnDef.header, header.getContext())}
+                                    </th>
                                 ))}
                             </tr>
                         ))}
                     </thead>
                     <tbody>
-                        {table.getRowModel().rows.map(row => (
-                            <motion.tr key={row.id} className="hover:bg-gray-100">
+                        {table.getRowModel().rows.map((row, index) => (
+                            <motion.tr
+                                key={row.id}
+                                className= "hover:bg-gray-50 transition-colors"
+                            >
                                 {row.getVisibleCells().map(cell => (
-                                    <td key={cell.id} className="p-4 border">{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                                    <td key={cell.id} className="py-4 px-6 text-sm text-gray-700">
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </td>
                                 ))}
                             </motion.tr>
                         ))}
                     </tbody>
                 </table>
+
+
             </div>
 
             {/* Modal */}
@@ -154,8 +161,8 @@ const EmployCard = ({ switchTab, updateViewId }) => {
                             <InputBox label="Email" name="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} error={errors.email} type="email" />
                             {!isEditing && <InputBox label="Password" name="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} error={errors.password} type="password" />}
                             <div className="flex justify-end space-x-2 mt-4">
-                                <motion.button onClick={() => setModalOpen(false)} className="bg-gray-500 text-white px-3 py-1 rounded-lg hover:bg-gray-600 transition">Cancel</motion.button>
-                                <motion.button type="submit" className="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition">{isEditing ? "Update" : "Add"}</motion.button>
+                                <motion.button onClick={() => setModalOpen(false)} className="bg-gray-500 text-white cursor-pointer px-3 py-1 rounded-lg hover:bg-gray-600 transition">Cancel</motion.button>
+                                <motion.button type="submit" className="bg-blue-600 text-white px-3 py-1 rounded-lg cursor-pointer hover:bg-blue-700 transition">{isEditing ? "Update" : "Add"}</motion.button>
                             </div>
                         </form>
                     </motion.div>

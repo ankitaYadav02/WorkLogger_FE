@@ -6,15 +6,17 @@ const useAdminHook = () => {
     const [admin_employee, setAdminEmployee] = useState(null);
     const [error , setError] = useState(null);
     const [loading , setLoading] = useState(true);
+    const [admin_name ,  setAdminName] = useState('')
 
     useEffect(() => {
         Admin_employes();
-    }, [loading]);
+        current_user();
+    }, []);
 
     const Admin_employes = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${API_BASE_URL}/all-employ`, {
+            const response = await axios.post(`${API_BASE_URL}/all-employ`, {},{
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
@@ -147,12 +149,26 @@ const useAdminHook = () => {
           throw error;
         }
       };
+      const current_user = async()=>{
+        try {
+            const response = await axios.get(`${API_BASE_URL}/current-admin`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
+            setAdminName(response.data.data.name)
+            return response.data.data;
+          } catch (error) {
+            throw error;
+          }
+      }
     return {
         admin_employee,
         error,
         loading,
         Admin_employes,
-        AddEmploye , EditEmploye , DeleteEmploye , getAttendence , UpdateWorking_Hour , FetchMonthlyData , FetchweeklyData
+        AddEmploye , EditEmploye , DeleteEmploye , getAttendence , UpdateWorking_Hour , FetchMonthlyData , FetchweeklyData , 
+        admin_name
     };
 };
 

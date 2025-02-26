@@ -11,7 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState({ email: "", password: "" });
-  const { login , loading } = useAuth();
+  const { login, loading } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
@@ -92,7 +92,9 @@ const Login = () => {
           </Link>
         </div>
 
-        <ButtonCard title="Login" onClick={handleSubmit} />
+        <div className="flex justify-center w-max ">
+          <ButtonCard title="Login" onClick={handleSubmit} />
+        </div>
       </div>
     </div>
   );

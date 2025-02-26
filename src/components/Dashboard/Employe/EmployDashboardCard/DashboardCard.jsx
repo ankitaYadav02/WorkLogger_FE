@@ -12,11 +12,11 @@ const EmployeeDashboard = () => {
       className="mx-auto md:p-6 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg shadow-2xl max-w-7xl w-full"
     >
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        Employee Dashboard
+         Dashboard
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ClockInCard />
-          <WorkerHistoryChart />
+        <ClockInCard />
+        <WorkerHistoryChart />
       </div>
       <div className="mt-8 bg-white rounded-lg shadow-lg md:p-4 overflow-x-auto">
         <WorkHistoryTable />

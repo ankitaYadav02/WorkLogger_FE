@@ -119,7 +119,7 @@ const ChangePassword = ({ role }) => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         error={errors.confirmPassword}
                     />
-                    <div className="flex flex-col justify-between">
+                    <div className="flex flex-col justify-between w-max">
                         <ButtonCard title="Change Password" type="submit" />
                     </div>
                 </form>

@@ -38,22 +38,24 @@ const Dashboard = () => {
         <div className="flex flex-col h-full">
           <button
             onClick={toggleSidebar}
-            className={` fixed z-10 ${isCollapsed ? "md:text-white text-blue-600" : "text-white"} mt-4 ml-4`}
+            className={` fixed z-10 ${isCollapsed ? "md:text-white text-blue-600" : "text-white"} mt-4 ml-4 block md:hidden `}
           >
             <FiMenu size={24} />
           </button>
-          <nav className="mt-12 flex flex-col px-4">
-            {menuData.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleMenuClick(item.id)}
-                className={`flex items-center py-2 text-sm font-medium transition-all hover:text-primary duration-150 ease-in-out rounded-lg my-2 ${activeMenu === item.id ? "bg-white text-blue-600" : "hover:bg-secondary"} ${isCollapsed ? "justify-center" : "justify-start px-4"}`}
-              >
-                {item.icon}
-                <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>{item.label}</span>
-              </button>
-            ))}
-            <button className={`flex items-center py-2 text-sm font-medium transition-all hover:text-primary duration-150 ease-in-out rounded-lg my-2" hover:bg-secondary ${isCollapsed ? "justify-center" : "justify-start gap-2 px-4"}`} onClick={logoutCall}>
+          <nav className="mt-12 flex flex-col px-4 flex flex-col justify-between     h-[-webkit-fill-available]">
+            <div>
+              {menuData.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleMenuClick(item.id)}
+                  className={`flex items-center py-2 text-sm font-medium transition-all hover:border hover:border-white cursor-pointer hover:text-primary duration-150 ease-in-out rounded-lg my-2 ${activeMenu === item.id ? "bg-white text-blue-600" : "hover:bg-secondary"} ${isCollapsed ? "justify-center" : "justify-start px-4"}`}
+                >
+                  {item.icon}
+                  <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>{item.label}</span>
+                </button>
+              ))}
+            </div>
+            <button className={`flex items-center py-2 text-sm cursor-pointer font-medium transition-all hover:text-primary duration-150 ease-in-out rounded-lg my-2" hover:bg-secondary ${isCollapsed ? "justify-center" : "justify-start gap-2 px-4"}`} onClick={logoutCall}>
               <FiLogOut size={20} />
               {isCollapsed ? "" : " Logout"}
             </button>

@@ -43,7 +43,7 @@ const AttendanceGraph = ({ switchTab, viewId }) => {
         <div className="p-4 w-full max-w-4xl mx-auto">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center space-x-2">
-                    <button onClick={()=>switchTab(0)} className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition">Back</button>
+                    <button onClick={()=>switchTab(0)} className="bg-blue-500 cursor-pointer text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition">Back</button>
                     <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
                         Attendance Overview
                     </h2>

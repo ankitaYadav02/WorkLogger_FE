@@ -20,9 +20,9 @@ const EmployTab = () => {
     return (
         <>
             <div >
-                {activeTab !== 0 && (
+                {/* {activeTab !== 0 && (
                     <button className="text-2xl fixed md:top-4 top-10 left-4  " onClick={() => setActiveTab(0)}><IoArrowBack /></button>
-                )}
+                )} */}
                 {tabs.find((tab) => tab.id === activeTab)?.content}
             </div>
         </>

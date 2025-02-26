@@ -6,7 +6,7 @@ import Loading from "../Loading";
 const formatDate = (isoString) => {
   const date = new Date(isoString);
   return date.toLocaleDateString("en-GB");
-}; 
+};
 
 const cleanWorkHour = (work_hour) => {
   const cleanText = work_hour.replace(/"/g, "");
@@ -14,7 +14,7 @@ const cleanWorkHour = (work_hour) => {
 };
 
 const formatPunchTimes = (working_hours) => {
-  if (!working_hours  || working_hours.length === 0) {
+  if (!working_hours || working_hours.length === 0) {
     return ["No Punch Data"];
   }
 
@@ -26,7 +26,7 @@ const formatPunchTimes = (working_hours) => {
 
 const WorkHistoryTable = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("Weekly");
-  const { FetchMonthlyData, FetchweeklyData , isLoading } = useDashboardData();
+  const { FetchMonthlyData, FetchweeklyData, isLoading } = useDashboardData();
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -56,6 +56,20 @@ const WorkHistoryTable = () => {
     return <Loading />;
   }
 
+  if (data.length === 0) {
+    return (
+      <>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-gray-500"
+        >
+          Sorry, No Records Available
+        </motion.div>
+      </>
+    )
+  }
   return (
     <div className="md:p-6 bg-gray-50 rounded-lg shadow-sm">
       <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Work History</h3>

@@ -3,7 +3,9 @@ import { FiMenu, FiSettings, FiLogOut, FiInfo, } from "react-icons/fi";
 import ChangePassword from '../../../Auth/ChangePassword/PasswordChange';
 import { useNavigate } from "react-router-dom";
 import EmployTab from '../EmployTab'
-
+import { IoMdPeople } from "react-icons/io";
+import AddEmployee from '../Add_Employe/AddEmployCard'
+import { IoMdPersonAdd } from "react-icons/io";
 
 const DashboardAdmin = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -25,9 +27,13 @@ const DashboardAdmin = () => {
       setIsCollapsed(true);
     }
   };
+  const handleChangeTab = (tab) => {
+    setActiveMenu(tab);
+  }
   const menuData = [
-    { id: "Employs", label: "Employs", icon: <FiInfo size={20} />, content: <EmployTab /> },
+    { id: "Employs", label: "Employs", icon: <IoMdPeople size={20} />, content: <EmployTab /> },
     { id: "ChangePassword", label: "Change Password", icon: <FiSettings size={20} />, content: <ChangePassword role={"admin"} /> },
+    { id: "Add_Employee", label: "Add Emplloyee", icon: <IoMdPersonAdd size={20} />, content: <AddEmployee handleChangeTab={handleChangeTab} /> },
   ];
 
 
@@ -44,22 +50,24 @@ const DashboardAdmin = () => {
         <div className="flex flex-col h-full">
           <button
             onClick={toggleSidebar}
-            className={` fixed z-10 ${isCollapsed ? "md:text-white text-blue-600" : "text-white"} mt-4 ml-4`}
+            className={` fixed z-10 ${isCollapsed ? "md:text-white text-blue-600" : "text-white"} mt-4 ml-4 md:hidden bloack`}
           >
             <FiMenu size={24} />
           </button>
-          <nav className="mt-12 flex flex-col px-4">
-            {menuData.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleMenuClick(item.id)}
-                className={`flex items-center py-2 text-sm font-medium transition-all hover:text-primary duration-150 ease-in-out rounded-lg my-2 ${activeMenu === item.id ? "bg-white text-blue-600  " : "hover:bg-secondary"} ${isCollapsed ? "justify-center" : "justify-start px-4"}`}
-              >
-                {item.icon}
-                <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>{item.label}</span>
-              </button>
-            ))}
-            <button className={`flex items-center py-2 text-sm font-medium transition-all hover:text-primary duration-150 ease-in-out rounded-lg my-2" hover:bg-secondary ${isCollapsed ? "justify-center" : "justify-start gap-2 px-4"}`} onClick={logoutCall}>
+          <nav className="mt-12 flex flex-col justify-between h-[-webkit-fill-available] px-4">
+            <div className="flex flex-col">
+              {menuData.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleMenuClick(item.id)}
+                  className={`flex items-center py-2 text-sm font-medium transition-all cursor-pointer hover:border hover:text-primary duration-150 ease-in-out rounded-lg my-2 ${activeMenu === item.id ? "bg-white text-blue-600  " : "hover:bg-secondary"} ${isCollapsed ? "justify-center" : "justify-start px-4"}`}
+                >
+                  {item.icon}
+                  <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>{item.label}</span>
+                </button>
+              ))}
+            </div>
+            <button className={`flex items-center py-2 text-sm font-medium transition-all relative bottom-0 hover:border hover:text-primary duration-150 ease-in-out rounded-lg my-2" hover:bg-secondary ${isCollapsed ? "justify-center" : "justify-start gap-2 px-4"}`} onClick={logoutCall}>
               <FiLogOut size={20} />
               {isCollapsed ? "" : " Logout"}
             </button>

@@ -10,35 +10,29 @@ import {
 import { motion } from "framer-motion";
 import Card from "../Primitives/Card/Card";
 import useDashboardData from "../../hooks/useEmployDashboard";
-import Loading from "../Loading";
 
 const WorkerHistoryChart = () => {
   const [filter, setFilter] = useState("Weekly");
   const [workHistory, setWorkHistory] = useState([]);
-  const { FetchMonthlyData, FetchweeklyData , isLoading } = useDashboardData();
+  const [loading, setLoading] = useState(false);
+  const { FetchMonthlyData, FetchweeklyData } = useDashboardData();
 
   useEffect(() => {
-    if (filter === "Weekly") {
-      FetchweeklyData().then((res) => {
-        setWorkHistory(formatWorkData(res));
-      });
-    } else if (filter === "Monthly") {
-      FetchMonthlyData().then((res) => {
-        setWorkHistory(formatWorkData(res));
-      });
-    }
+    setLoading(true);
+    const fetchData = filter === "Weekly" ? FetchweeklyData : FetchMonthlyData;
+    
+    fetchData()
+      .then((res) => setWorkHistory(formatWorkData(res)))
+      .finally(() => setLoading(false));
   }, [filter]);
+
   const convertTimeToHours = (timeStr) => {
-    if (!timeStr || timeStr === '"0"' || timeStr === "0") return 0; 
-
-    const cleanedTimeStr = timeStr.replace(/"/g, ""); 
+    if (!timeStr || timeStr === '"0"' || timeStr === "0") return 0;
+    const cleanedTimeStr = timeStr.replace(/"/g, "");
     const timeParts = cleanedTimeStr.split(":").map(Number);
-
-    if (timeParts.length === 3) {
-      const [hours, minutes, seconds] = timeParts;
-      return hours + minutes / 60 + seconds / 3600;
-    }
-    return 0; 
+    return timeParts.length === 3
+      ? timeParts[0] + timeParts[1] / 60 + timeParts[2] / 3600
+      : 0;
   };
 
   const formatWorkData = (data) => {
@@ -50,34 +44,20 @@ const WorkerHistoryChart = () => {
 
   const getFilteredWorkHistory = () => {
     const now = new Date();
-    const today = now.toISOString().split("T")[0];
-
-    if (filter === "daily") {
-      return workHistory.filter((entry) => entry.date === today);
-    }
-
     if (filter === "Weekly") {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-      return workHistory.filter(
-        (entry) => new Date(entry.date) >= sevenDaysAgo
-      );
+      return workHistory.filter((entry) => new Date(entry.date) >= sevenDaysAgo);
     }
-
     if (filter === "Monthly") {
       const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      return workHistory.filter(
-        (entry) => new Date(entry.date) >= firstDayOfMonth
-      );
+      return workHistory.filter((entry) => new Date(entry.date) >= firstDayOfMonth);
     }
-
     return workHistory;
   };
 
   const filteredWorkHistory = getFilteredWorkHistory();
-  if (isLoading) {
-    return <Loading />;
-  }
+
   return (
     <Card>
       <div className="max-w-2xs flex items-center gap-2">
@@ -91,13 +71,27 @@ const WorkerHistoryChart = () => {
           <option value="Monthly">Monthly</option>
         </select>
       </div>
-      <div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="mt-4 bg-white p-4 "
-        >
+      
+      <div className="relative mt-4 bg-white p-4 min-h-[300px] flex justify-center items-center">
+        {loading ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-gray-500"
+          >
+            Loading data...
+          </motion.div>
+        ) : filteredWorkHistory.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-gray-500"
+          >
+            Sorry, No Records Available
+          </motion.div>
+        ) : (
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={filteredWorkHistory}>
               <XAxis dataKey="date" />
@@ -106,7 +100,7 @@ const WorkerHistoryChart = () => {
               <Bar dataKey="hours" fill="#8884d8" />
             </BarChart>
           </ResponsiveContainer>
-        </motion.div>
+        )}
       </div>
     </Card>
   );
