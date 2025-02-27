@@ -178,7 +178,7 @@ const EmployCard = ({ switchTab, updateViewId }) => {
     <div className="min-h-screen p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold text-black text-center">
-          {admin_name} Dashboard
+          Hey {admin_name}  👋
         </h1>
         <InputBox
           placeholder="Search..."
