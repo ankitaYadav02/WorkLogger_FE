@@ -15,6 +15,7 @@ const ForgetPassword = () => {
   const [otp, setOtp] = useState("");
   const [resotp, setResotp] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [tooglePassword, setTogglePassword] = useState(false);
   const { ForgrtPasswordOTP, ChangeForgetPasswors, isLoading } =
     useDashboardData();
   const [emailError, setEmailError] = useState("");
@@ -121,7 +122,7 @@ const ForgetPassword = () => {
                 to="/"
                 className="text-[#0066ff] hover:underline text-sm font-bold flex flex-row justify-center gap-2"
               >
-                <HiArrowNarrowLeft className="self-center"/> Back to Sign In
+                <HiArrowNarrowLeft className="self-center" /> Back to Sign In
               </Link>
             </div>
           </form>
@@ -157,11 +158,21 @@ const ForgetPassword = () => {
                 label="New Password"
                 placeholder="Enter new password"
                 name="newPassword"
-                type="password"
+                type={tooglePassword ? "text" : "password"}
                 value={newPassword}
                 onChange={handlePasswordChange}
                 error={new_password_error}
               />
+            </div>
+            <div className="flex items-center mt-2">
+              <input
+                type="checkbox"
+                id="togglePassword"
+                className="mr-2"
+                checked={tooglePassword}
+                onChange={(e) => setTogglePassword(e.target.checked)}
+              />
+              <label htmlFor="togglePassword">Show Password</label>
             </div>
             <div className="flex justify-center">
               <ButtonCard title="Reset Password" type="submit" />

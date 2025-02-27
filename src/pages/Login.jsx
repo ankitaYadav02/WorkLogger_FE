@@ -6,9 +6,8 @@ import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
-import logo from '../assets/icon.png';
-import background from '../assets/background.webp';
-
+import logo from "../assets/icon.png";
+import background from "../assets/background.webp";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,6 +15,7 @@ const Login = () => {
   const [error, setError] = useState({ email: "", password: "" });
   const { login, loading } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
+  const [tooglePassword, setTooglePassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,7 +50,9 @@ const Login = () => {
     setError(newError);
     const response = await login(email, password);
     if (response.statusCode === 200) {
-      navigate(response.data.userType === "admin" ? "/admin-dashboard" : "/dashboard");
+      navigate(
+        response.data.userType === "admin" ? "/admin-dashboard" : "/dashboard"
+      );
       enqueueSnackbar(response.message, { variant: "success" });
     } else {
       enqueueSnackbar(response.message, { variant: "error" });
@@ -61,7 +63,10 @@ const Login = () => {
     return <Loading />;
   }
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-100 bg-no-repeat bg-cover bg-center" style={{ backgroundImage: `url(${background})` }}>
+    <div
+      className="h-screen flex items-center justify-center bg-gray-100 bg-no-repeat bg-cover bg-center"
+      style={{ backgroundImage: `url(${background})` }}
+    >
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg flex flex-col gap-4 p-10">
         <img src={logo} alt="logo" className="h-20 w-40 self-center"></img>
         <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
@@ -85,8 +90,18 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={error.password}
-          type="password"
+          type={tooglePassword ? "text" : "password"}
         />
+        <div className="flex justify-between">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              checked={tooglePassword}
+              onChange={() => setTooglePassword(!tooglePassword)}
+            />
+            <span className="ml-2">Show Password</span>
+          </div>
+        </div>
         <div className="text-right">
           <Link
             to="/forget-password"

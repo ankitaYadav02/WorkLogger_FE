@@ -19,12 +19,15 @@ const formatPunchTimes = (working_hours) => {
 
   return working_hours.map((punch) => {
     const { punch_in_time, punch_out_time } = punch;
+    if (punch_out_time === null) {
+      return `${punch_in_time} - Currently Working`;
+    }
     return `${punch_in_time} - ${punch_out_time}`;
-  })
+  });
 };
 
 const WorkHistoryTable = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("Weekly");
+  const [selectedPeriod, setSelectedPeriod] = useState("Monthly");
   const { FetchMonthlyData, FetchweeklyData, isLoading } = useDashboardData();
   const [data, setData] = useState([]);
 
@@ -55,23 +58,31 @@ const WorkHistoryTable = () => {
     return (
       <>
         <div className="w-full h-full flex justify-center items-center">
-        <div className="flex space-x-2">
-          <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce" style={{ animationDelay: "-0.3s" }}></div>
-          <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce" style={{ animationDelay: "-0.15s" }}></div>
-          <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce"></div>
-        </div>
+          <div className="flex space-x-2">
+            <div
+              className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce"
+              style={{ animationDelay: "-0.3s" }}
+            ></div>
+            <div
+              className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce"
+              style={{ animationDelay: "-0.15s" }}
+            ></div>
+            <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce"></div>
+          </div>
         </div>
       </>
-    )
+    );
   }
 
   return (
     <div className="md:p-6 bg-gray-50 rounded-lg shadow-sm">
-      <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Work History</h3>
+      <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+        Work History
+      </h3>
 
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <p className="text-gray-600 mb-4 sm:mb-0">
-          Total Hours: <span className="font-bold text-gray-800">45 Hours</span>
+          {/* Total Hours: <span className="font-bold text-gray-800">45 Hours</span> */}
         </p>
         <PeriodSelector
           onSelect={(e) => setSelectedPeriod(e)}
