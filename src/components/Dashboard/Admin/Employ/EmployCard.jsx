@@ -4,39 +4,26 @@ import {
     getCoreRowModel,
     flexRender,
 } from "@tanstack/react-table";
-import { useDebouncedCallback } from 'use-debounce';
-
 import { motion } from "framer-motion";
 import InputBox from "../../../Primitives/Inputbox";
 import useAdminHook from "../../../../hooks/useAdminHook";
 import { useSnackbar } from "notistack";
-import { FaEdit, FaRegEye } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import { PiListChecksFill } from "react-icons/pi";
-
+import Loading from "../../../Loading";
 
 const EmployCard = ({ switchTab, updateViewId }) => {
-    const { admin_name, admin_employee, loading, SearchEmployee, AddEmploye, EditEmploye, DeleteEmploye } = useAdminHook();
+    const { admin_name, admin_employee, loading, AddEmploye, EditEmploye, DeleteEmploye } = useAdminHook();
     const [employees, setEmployees] = useState([]);
     const [formData, setFormData] = useState({ id: "", name: "", email: "", password: "" });
     const [isEditing, setIsEditing] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
-    const [name, setName] = useState("");
     const { enqueueSnackbar } = useSnackbar();
     const [errors, setErrors] = useState({});
+
     useEffect(() => {
         if (!loading && admin_employee) {
             setEmployees(admin_employee);
         }
     }, [admin_employee]);
-    const debouncedSearchEmployee = useDebouncedCallback((name) => {
-        SearchEmployee(name);
-    }, 1000);
-
-    useEffect(() => {
-        debouncedSearchEmployee(name);
-    }, [name]);
-
 
     const validateForm = () => {
         let newErrors = {};
@@ -77,6 +64,7 @@ const EmployCard = ({ switchTab, updateViewId }) => {
             setModalOpen(true);
         }
     };
+
     const handleDelete = async (id) => {
         const res = await DeleteEmploye(id);
         if (res.statusCode === 200) {
@@ -86,10 +74,12 @@ const EmployCard = ({ switchTab, updateViewId }) => {
             enqueueSnackbar(res.message, { variant: "error" });
         }
     };
+
     const handleUpdateViewId = (id, tab) => {
         updateViewId(id);
         switchTab(tab);
     };
+
     const columns = [
         { accessorKey: "name", header: "Name" },
         { accessorKey: "email", header: "Email" },
@@ -98,10 +88,10 @@ const EmployCard = ({ switchTab, updateViewId }) => {
             header: "Actions",
             cell: ({ row }) => (
                 <div className="flex space-x-4">
-                    <motion.button onClick={() => handleUpdateViewId(row.original.id, 2)} className="bg-green-500 cursor-pointer text-white px-3 py-1 rounded-lg hover:bg-green-600 transition"><FaRegEye /></motion.button>
-                    <motion.button onClick={() => handleUpdateViewId(row.original.id, 1)} className="bg-blue-500 cursor-pointer text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition"><PiListChecksFill /></motion.button>
-                    <motion.button onClick={() => handleEdit(row.original.id)} className="bg-yellow-500 text-white cursor-pointer px-3 py-1 rounded-lg hover:bg-yellow-600 transition"><FaEdit /></motion.button>
-                    <motion.button onClick={() => handleDelete(row.original.id)} className="bg-red-500 text-white cursor-pointer px-3 py-1 rounded-lg hover:bg-red-600 transition"><MdDelete /></motion.button>
+                    <motion.button onClick={() => handleUpdateViewId(row.original.id, 2)} className="bg-green-500 cursor-pointer text-white px-3 py-1 rounded-lg hover:bg-green-600 transition">View</motion.button>
+                    <motion.button onClick={() => handleUpdateViewId(row.original.id, 1)} className="bg-blue-500 cursor-pointer text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition">Attendance</motion.button>
+                    <motion.button onClick={() => handleEdit(row.original.id)} className="bg-yellow-500 text-white cursor-pointer px-3 py-1 rounded-lg hover:bg-yellow-600 transition">Edit</motion.button>
+                    <motion.button onClick={() => handleDelete(row.original.id)} className="bg-red-500 text-white cursor-pointer px-3 py-1 rounded-lg hover:bg-red-600 transition">Delete</motion.button>
                 </div>
             ),
         },
@@ -127,14 +117,10 @@ const EmployCard = ({ switchTab, updateViewId }) => {
         );
     }
 
-
-
-
     return (
-        <div className="min-h-screen bg-white p-6">
+        <div className="min-h-screen p-6">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-4xl font-bold text-black text-center">{admin_name} Dashboard</h1>
-                <InputBox placeholder="Search..." value={name} onChange={(e) => setName(e.target.value)} />
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">

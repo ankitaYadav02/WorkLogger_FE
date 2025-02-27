@@ -13,7 +13,7 @@ const EmployTab = () => {
         setViewId(id);
     } 
     const tabs = [
-        { id: 0, label: "AllEmploys", content: <EmployCard switchTab={switchTab} updateViewId={updateViewId} /> },
+        { id: 0, label: "AllEmployee", content: <EmployCard switchTab={switchTab} updateViewId={updateViewId} /> },
         { id: 1, label: "Employees", content: <AttendanceList switchTab={switchTab} viewId={ViewId} /> },
         { id: 2, label: "Graph", content: <AttendanceGraph switchTab={switchTab} viewId={ViewId} /> },
     ];

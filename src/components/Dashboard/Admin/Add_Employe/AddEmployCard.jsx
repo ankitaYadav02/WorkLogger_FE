@@ -37,7 +37,7 @@ const AddEmployee = ({handleChangeTab}) => {
             const response =  await AddEmploye(name, email, password);
             if (response.statusCode === 200) {
                 enqueueSnackbar(response.message, { variant: "success" });
-                handleChangeTab("Employs");
+                handleChangeTab("Employee");
             } else {
                 enqueueSnackbar(response.message, { variant: "error" });
             }
@@ -50,7 +50,7 @@ const AddEmployee = ({handleChangeTab}) => {
 
     return (
         <div className="max-w-lg mx-auto bg-white p-6 shadow-md rounded-md mt-8">
-            <h1 className="text-2xl font-bold mb-4">Add Employee</h1>
+            <h1 className="text-2xl text-center font-bold mb-4">Add Employee</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <InputBox
                     label="Name"
@@ -86,9 +86,9 @@ const AddEmployee = ({handleChangeTab}) => {
                     type="password"
                 />
 
-                <div className="flex justify-end space-x-2 w-max">
-                    <ButtonCard title="Add" type="submit" />
-                </div>
+                {/* <div className="flex justify-end space-x-2 w-max"> */}
+                    <ButtonCard title="Add" type="submit"  style="w-fit"/>
+                {/* </div> */}
             </form>
         </div>
     );

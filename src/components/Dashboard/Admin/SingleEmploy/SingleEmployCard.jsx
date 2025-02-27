@@ -15,7 +15,6 @@ const AttendanceList = ({ switchTab, viewId }) => {
     try {
       const id = viewId;
       const data = await getAttendence(id);
-      console.log(data);
       const formattedData = data.reduce((acc, entry) => {
         acc[entry.date] = entry;
         return acc;

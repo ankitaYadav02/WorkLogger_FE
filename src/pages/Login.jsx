@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
+import logo from '../assets/icon.png';
+import background from '../assets/background.webp';
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +16,6 @@ const Login = () => {
   const [error, setError] = useState({ email: "", password: "" });
   const { login, loading } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
-const [tooglePassword, setTooglePassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,14 +61,15 @@ const [tooglePassword, setTooglePassword] = useState(false);
     return <Loading />;
   }
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg flex flex-col gap-4">
+    <div className="h-screen flex items-center justify-center bg-gray-100 bg-no-repeat bg-cover bg-center" style={{ backgroundImage: `url(${background})` }}>
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg flex flex-col gap-4 p-10">
+        <img src={logo} alt="logo" className="h-20 w-40 self-center"></img>
         <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
-          Login
+          Sign in to Work logger
         </h2>
 
         <InputBox
-          label="Email"
+          // label="Email"
           placeholder="Enter your email"
           name="email"
           value={email}
@@ -74,35 +77,26 @@ const [tooglePassword, setTooglePassword] = useState(false);
           error={error.email}
           type="email"
         />
+
         <InputBox
-          label="Password"
+          // label="Password"
           placeholder="Enter your password"
           name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={error.password}
-          type={tooglePassword ? "text" : "password"}
+          type="password"
         />
-        <div className="flex justify-between">
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              checked={tooglePassword}
-              onChange={() => setTooglePassword(!tooglePassword)}
-            />
-            <span className="ml-2">Show Password</span>
-          </div>
+        <div className="text-right">
           <Link
             to="/forget-password"
-            className="text-blue-500 hover:underline text-sm"
+            className="text-[#0066ff] hover:underline text-sm"
           >
             Forgot Password?
           </Link>
-
         </div>
 
-
-        <div className="flex justify-center w-max ">
+        <div className="flex justify-center self-center w-full">
           <ButtonCard title="Login" onClick={handleSubmit} />
         </div>
       </div>
