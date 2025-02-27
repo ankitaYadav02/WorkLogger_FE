@@ -19,12 +19,15 @@ const formatPunchTimes = (working_hours) => {
 
   return working_hours.map((punch) => {
     const { punch_in_time, punch_out_time } = punch;
+    if(punch_out_time === null){
+      return `${punch_in_time} - Currently Working`;
+    }
     return `${punch_in_time} - ${punch_out_time}`;
   })
 };
 
 const WorkHistoryTable = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("Weekly");
+  const [selectedPeriod, setSelectedPeriod] = useState("Monthly");
   const { FetchMonthlyData, FetchweeklyData, isLoading } = useDashboardData();
   const [data, setData] = useState([]);
 
@@ -71,7 +74,7 @@ const WorkHistoryTable = () => {
 
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <p className="text-gray-600 mb-4 sm:mb-0">
-          Total Hours: <span className="font-bold text-gray-800">45 Hours</span>
+          {/* Total Hours: <span className="font-bold text-gray-800">45 Hours</span> */}
         </p>
         <PeriodSelector
           onSelect={(e) => setSelectedPeriod(e)}

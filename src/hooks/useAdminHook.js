@@ -166,13 +166,27 @@ const useAdminHook = () => {
             throw error;
           }
       }
+
+      const SearchEmployee = async (name) => {
+        try {
+          const response = await axios.post(`${API_BASE_URL}/employ-search`,{name}, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          setAdminEmployee(response.data.data);
+          return response.data.data;
+        } catch (error) {
+          throw error;
+        }
+      };
     return {
         admin_employee,
         error,
         loading,
         Admin_employes,
         AddEmploye , EditEmploye , DeleteEmploye , getAttendence , UpdateWorking_Hour , FetchMonthlyData , FetchweeklyData , 
-        admin_name
+        admin_name , SearchEmployee
     };
 };
 

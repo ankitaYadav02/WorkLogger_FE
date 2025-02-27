@@ -16,6 +16,7 @@ const ForgetPassword = () => {
     const { ForgrtPasswordOTP, ChangeForgetPasswors, isLoading } = useDashboardData();
     const [emailError, setEmailError] = useState("");
     const { enqueueSnackbar } = useSnackbar();
+    const [tooglePassword , setTogglePassword] = useState(false);
     const [new_password_error, set_new_password_error] = useState("");
     const validateEmail = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -132,11 +133,21 @@ const ForgetPassword = () => {
                                 label="New Password"
                                 placeholder="Enter new password"
                                 name="newPassword"
-                                type="password"
+                                type={tooglePassword ? "text" : "password"}
                                 value={newPassword}
                                 onChange={handlePasswordChange}
                                 error={new_password_error}
                             />
+                            <div className="flex items-center mt-2">
+                                <input
+                                    type="checkbox"
+                                    id="togglePassword"
+                                    className="mr-2"
+                                    checked={tooglePassword}
+                                    onChange={(e) => setTogglePassword(e.target.checked)}
+                                />
+                                <label htmlFor="togglePassword">Show Password</label>
+                            </div>
                         </div>
                         <div className="flex justify-center">
                             <ButtonCard title="Reset Password" type="submit" />

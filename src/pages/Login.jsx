@@ -13,6 +13,7 @@ const Login = () => {
   const [error, setError] = useState({ email: "", password: "" });
   const { login, loading } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
+const [tooglePassword, setTooglePassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -73,7 +74,6 @@ const Login = () => {
           error={error.email}
           type="email"
         />
-
         <InputBox
           label="Password"
           placeholder="Enter your password"
@@ -81,16 +81,26 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={error.password}
-          type="password"
+          type={tooglePassword ? "text" : "password"}
         />
-        <div className="text-right">
+        <div className="flex justify-between">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              checked={tooglePassword}
+              onChange={() => setTooglePassword(!tooglePassword)}
+            />
+            <span className="ml-2">Show Password</span>
+          </div>
           <Link
             to="/forget-password"
             className="text-blue-500 hover:underline text-sm"
           >
             Forgot Password?
           </Link>
+
         </div>
+
 
         <div className="flex justify-center w-max ">
           <ButtonCard title="Login" onClick={handleSubmit} />
