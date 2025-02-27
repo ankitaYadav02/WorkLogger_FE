@@ -67,7 +67,7 @@ const DashboardAdmin = () => {
                 </button>
               ))}
             </div>
-            <button className={`flex items-center py-2 text-sm cursor-pointer font-medium transition-all relative bottom-0 hover:border hover:text-primary duration-150 ease-in-out rounded-lg" hover:bg-secondary ${isCollapsed ? "justify-center" : "justify-start gap-2 px-4"}`} onClick={logoutCall}>
+            <button className={`flex items-center py-2 text-sm cursor-pointer font-medium transition-all relative bottom-0  hover:text-primary duration-150 ease-in-out rounded-lg ${isCollapsed ? "justify-center" : "justify-start gap-2 px-4"}`} onClick={logoutCall}>
               <FiLogOut size={20} />
               {isCollapsed ? "" : " Logout"}
             </button>
