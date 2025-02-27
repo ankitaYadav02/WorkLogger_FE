@@ -55,7 +55,7 @@ const Dashboard = () => {
                 </button>
               ))}
             </div>
-            <button className={`flex items-center py-2 text-sm cursor-pointer font-medium transition-all hover:text-primary duration-150 ease-in-out rounded-lg my-2" hover:bg-secondary ${isCollapsed ? "justify-center" : "justify-start gap-2 px-4"}`} onClick={logoutCall}>
+            <button className={`flex  cursor-pointer items-center py-2 text-sm cursor-pointer font-medium transition-all hover:text-primary duration-150 ease-in-out rounded-lg my-2" hover:bg-secondary ${isCollapsed ? "justify-center" : "justify-start gap-2 px-4"}`} onClick={logoutCall}>
               <FiLogOut size={20} />
               {isCollapsed ? "" : " Logout"}
             </button>

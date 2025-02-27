@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import PeriodSelector from "./PeriodSelector";
 import { motion } from "framer-motion";
 import useDashboardData from "../../hooks/useEmployDashboard";
-import Loading from "../Loading";
 const formatDate = (isoString) => {
   const date = new Date(isoString);
   return date.toLocaleDateString("en-GB");
@@ -53,23 +52,19 @@ const WorkHistoryTable = () => {
   };
 
   if (isLoading) {
-    return <Loading />;
-  }
-
-  if (data.length === 0) {
     return (
       <>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-gray-500"
-        >
-          Sorry, No Records Available
-        </motion.div>
+        <div className="w-full h-full flex justify-center items-center">
+        <div className="flex space-x-2">
+          <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce" style={{ animationDelay: "-0.3s" }}></div>
+          <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce" style={{ animationDelay: "-0.15s" }}></div>
+          <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce"></div>
+        </div>
+        </div>
       </>
     )
   }
+
   return (
     <div className="md:p-6 bg-gray-50 rounded-lg shadow-sm">
       <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Work History</h3>

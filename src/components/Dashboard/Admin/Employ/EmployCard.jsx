@@ -23,7 +23,6 @@ const EmployCard = ({ switchTab, updateViewId }) => {
         if (!loading && admin_employee) {
             setEmployees(admin_employee);
         }
-        console.log(admin_employee)
     }, [admin_employee]);
 
     const validateForm = () => {

@@ -15,7 +15,6 @@ const AttendanceList = ({ switchTab, viewId }) => {
     try {
       const id = viewId;
       const data = await getAttendence(id);
-
       const formattedData = data.reduce((acc, entry) => {
         acc[entry.date] = entry;
         return acc;
@@ -142,8 +141,10 @@ const AttendanceList = ({ switchTab, viewId }) => {
           Attendance Records 
         </h2>
       </div>
+      
 
-      <motion.div
+      {attendanceData && Object.keys(attendanceData).length > 0 ? (
+        <motion.div
         className="space-y-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -257,6 +258,9 @@ const AttendanceList = ({ switchTab, viewId }) => {
           );
         })}
       </motion.div>
+      ) : (
+        <p className="text-center text-gray-500 mt-4">No attendance records found.</p>
+      )}
     </div>
   );
 };

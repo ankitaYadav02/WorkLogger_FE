@@ -12,7 +12,7 @@ import Card from "../Primitives/Card/Card";
 import useDashboardData from "../../hooks/useEmployDashboard";
 
 const WorkerHistoryChart = () => {
-  const [filter, setFilter] = useState("Weekly");
+  const [filter, setFilter] = useState("monthly");
   const [workHistory, setWorkHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const { FetchMonthlyData, FetchweeklyData } = useDashboardData();
@@ -67,8 +67,8 @@ const WorkerHistoryChart = () => {
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         >
-          <option value="Weekly">Weekly</option>
           <option value="Monthly">Monthly</option>
+          <option value="Weekly">Weekly</option>
         </select>
       </div>
       

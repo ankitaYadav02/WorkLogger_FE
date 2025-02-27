@@ -7,11 +7,12 @@ const useAdminHook = () => {
     const [error , setError] = useState(null);
     const [loading , setLoading] = useState(true);
     const [admin_name ,  setAdminName] = useState('')
+    const [updateData , setUpdateData] = useState(false)
 
     useEffect(() => {
         Admin_employes();
         current_user();
-    }, []);
+    }, [updateData]);
 
     const Admin_employes = async () => {
         setLoading(true);
@@ -43,6 +44,7 @@ const useAdminHook = () => {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             });
+            setUpdateData(!updateData)
             setLoading(false);
             return response.data;
         } catch (error) {
@@ -64,6 +66,7 @@ const useAdminHook = () => {
                 },
             });
             setLoading(false);
+            setUpdateData(!updateData)
             return response.data;
         } catch (error) {
             if (error.response.data) {
@@ -84,6 +87,7 @@ const useAdminHook = () => {
                 },
             });
             setLoading(false);
+            setUpdateData(!updateData)
             return response.data;
         } catch (error) {
             if (error.response.data) {
