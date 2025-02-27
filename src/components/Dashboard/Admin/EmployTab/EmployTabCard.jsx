@@ -11,7 +11,7 @@ const EmployTab = () => {
     }
     const updateViewId = (id) => {
         setViewId(id);
-    }
+    } 
     const tabs = [
         { id: 0, label: "AllEmploys", content: <EmployCard switchTab={switchTab} updateViewId={updateViewId} /> },
         { id: 1, label: "Employees", content: <AttendanceList switchTab={switchTab} viewId={ViewId} /> },

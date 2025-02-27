@@ -37,7 +37,7 @@ const AttendanceGraph = ({ switchTab, viewId }) => {
     if (loading) {
         return (
             <>
-                <div className="p-4 w-full mx-auto">
+                <div className="w-full h-screen flex items-center justify-center">
                     <div className="flex space-x-2">
                         <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce" style={{ animationDelay: "-0.3s" }}></div>
                         <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce" style={{ animationDelay: "-0.15s" }}></div>
@@ -63,7 +63,7 @@ const AttendanceGraph = ({ switchTab, viewId }) => {
                     >
                         <option value="monthly">Monthly</option>
                         <option value="weekly">Weekly</option>
-                        
+
                     </select>
                 </div>
             </div>

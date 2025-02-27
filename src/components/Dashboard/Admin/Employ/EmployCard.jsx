@@ -104,7 +104,17 @@ const EmployCard = ({ switchTab, updateViewId }) => {
     });
 
     if (loading) {
-        return <Loading />;
+        return (
+            <>
+                <div className="w-full h-screen flex items-center justify-center">
+                    <div className="flex space-x-2">
+                        <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce" style={{ animationDelay: "-0.3s" }}></div>
+                        <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce" style={{ animationDelay: "-0.15s" }}></div>
+                        <div className="h-8 w-8 bg-gradient-to-r from-blue-400 to-blue-800 rounded-full animate-bounce"></div>
+                    </div>
+                </div>
+            </>
+        );
     }
 
     return (
@@ -130,7 +140,7 @@ const EmployCard = ({ switchTab, updateViewId }) => {
                         {table.getRowModel().rows.map((row, index) => (
                             <motion.tr
                                 key={row.id}
-                                className= "hover:bg-gray-50 transition-colors"
+                                className="hover:bg-gray-50 transition-colors"
                             >
                                 {row.getVisibleCells().map(cell => (
                                     <td key={cell.id} className="py-4 px-6 text-sm text-gray-700">
