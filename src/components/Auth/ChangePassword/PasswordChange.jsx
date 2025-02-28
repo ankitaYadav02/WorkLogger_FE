@@ -14,6 +14,7 @@ const ChangePassword = ({ role }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const { enqueueSnackbar } = useSnackbar();
   const { Change_Password, Change_admin_Password, loading } = useAuth();
+  const [tooglePassword, setTooglePassword] = useState(false);
   useEffect(() => {
     if (confirmPassword && confirmPassword === newPassword) {
       setErrors((prev) => ({ ...prev, confirmPassword: "" }));
@@ -106,7 +107,7 @@ const ChangePassword = ({ role }) => {
           <InputBox
             label="Current Password"
             // placeholder="Enter your current password"
-            type="password"
+            type={tooglePassword ? "text" : "password"}
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             error={errors.currentPassword}
@@ -114,7 +115,7 @@ const ChangePassword = ({ role }) => {
           <InputBox
             label="New Password"
             // placeholder="Enter your new password"
-            type="password"
+            type={tooglePassword ? "text" : "password"}
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             error={errors.newPassword}
@@ -122,11 +123,19 @@ const ChangePassword = ({ role }) => {
           <InputBox
             label="Confirm Password"
             // placeholder="Confirm your new password"
-            type="password"
+            type={tooglePassword ? "text" : "password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             error={errors.confirmPassword}
           />
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              checked={tooglePassword}
+              onChange={() => setTooglePassword(!tooglePassword)}
+            />
+            <label className="ml-2">Show Password</label>
+          </div>
           <ButtonCard
             title="Change Password"
             type="submit"

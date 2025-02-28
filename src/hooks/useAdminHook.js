@@ -165,7 +165,7 @@ const useAdminHook = () => {
           } catch (error) {
             throw error;
           }
-      }
+      } 
 
       const SearchEmployee = async (name) => {
         try {
